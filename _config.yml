@@ -1,6 +1,6 @@
 # Site settings
 title: Dhruba Pujary
-description: 'A short description about me'
+description: 'I am an AI enthusiast and wants to explore the (un-)limited power of machines in a scientific way. Currently, I am in my final year of my AI Masters at University of Amsterdam.'
 url: 'https://druv022.github.io'
 baseurl: ''
 # google_analytics: 'UA-XXXXXX-X'
@@ -10,7 +10,7 @@ author:
   name: 'Dhruba Pujary'
   email: drv022@gmail.com
   twitter_username: druv022
-  facebook_username: drv022@gmail.com
+  facebook_username: druv022
   github_username:  druv022
   linkedin_username:  dhruba-pujary-894a2253
 
