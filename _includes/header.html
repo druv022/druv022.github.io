@@ -314,14 +314,8 @@
 <!-- Right panel -->
 <nav id="toc-panel-right" aria-label="Table of Contents">
   <h3>Table of Contents</h3>
-  <ul>
-    {% if page.toc %}
-      {% for item in page.toc %}
-        <li><a href="#{{ item.id }}">{{ item.text }}</a></li>
-      {% endfor %}
-    {% else %}
-      <li><em>No headings found</em></li>
-    {% endif %}
+  <ul id="toc-list">
+    <li><em>Loading...</em></li>
   </ul>
 </nav>
 <script>
@@ -349,6 +343,72 @@
       e.target !== tocHoverZone
     ) {
       tocPanelRight.classList.remove('visible');
+    }
+  });
+
+  // Dynamically generate hierarchical TOC up to H3 for blog pages
+  document.addEventListener('DOMContentLoaded', function() {
+    // Only run on blog pages (not homepage)
+    if (!window.location.pathname.match(/^\/($|index\.html)/)) {
+      const tocList = document.getElementById('toc-list');
+      const content = document.querySelector('.post, .page, .main-content, .site-content, main, #main');
+      if (!content) {
+        tocList.innerHTML = '<li><em>No headings found</em></li>';
+        return;
+      }
+      const headings = Array.from(content.querySelectorAll('h1, h2, h3'));
+      if (headings.length === 0) {
+        tocList.innerHTML = '<li><em>No headings found</em></li>';
+        return;
+      }
+
+      // Build hierarchy
+      let tocTree = [];
+      let lastH1 = null, lastH2 = null;
+      headings.forEach(h => {
+        if (!h.id) return;
+        const entry = { id: h.id, text: h.textContent, children: [] };
+        if (h.tagName === 'H1') {
+          tocTree.push(entry);
+          lastH1 = entry;
+          lastH2 = null;
+        } else if (h.tagName === 'H2') {
+          if (lastH1) {
+            lastH1.children.push(entry);
+            lastH2 = entry;
+          } else {
+            tocTree.push(entry); // fallback if no H1 before
+            lastH2 = entry;
+          }
+        } else if (h.tagName === 'H3') {
+          if (lastH2) {
+            lastH2.children.push(entry);
+          } else if (lastH1) {
+            lastH1.children.push(entry); // fallback if no H2 before
+          } else {
+            tocTree.push(entry); // fallback if no H1/H2 before
+          }
+        }
+      });
+
+      // Render hierarchy as nested list with dashes
+      function renderToc(items, level = 1) {
+        let html = '<ul style="margin-left:' + ((level-1)*1.2) + 'em">';
+        items.forEach(item => {
+          let prefix = '';
+          if (level === 2) prefix = '&ndash; ';
+          if (level === 3) prefix = '&middot; ';
+          html += `<li>${prefix}<a href="#${item.id}">${item.text}</a>`;
+          if (item.children && item.children.length) {
+            html += renderToc(item.children, level + 1);
+          }
+          html += '</li>';
+        });
+        html += '</ul>';
+        return html;
+      }
+
+      tocList.innerHTML = renderToc(tocTree, 1);
     }
   });
 </script>

@@ -26,6 +26,15 @@ Further breakdown of the topic.
 
 Even more detail.
 
+## Section Title 2 (H2)
+
+Some details about this section.
+
+### Subsection 2 (H3)
+
+- Point one
+- Point two
+
 ###### Smallest Heading (H6)
 
 This is the smallest header.
