@@ -308,12 +308,24 @@
     background: #7fa3c9;
     opacity: 0.8;
   }
+  /* When TOC is pinned, keep bar constant color and opacity */
+  #toc-hover-zone.pinned,
+  #toc-hover-zone.pinned:hover {
+    background: #c5d6e8 !important;
+    opacity: 0.5 !important;
+    cursor: default;
+  }
 </style>
 <!-- Right edge hover bar -->
 <div id="toc-hover-zone" title="Show Table of Contents"></div>
 <!-- Right panel -->
 <nav id="toc-panel-right" aria-label="Table of Contents">
-  <h3>Table of Contents</h3>
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <h3 style="margin: 0;">Table of Contents</h3>
+    <button id="toc-pin-btn" title="Pin/unpin TOC panel" style="background: none; border: none; cursor: pointer; font-size: 1.2em; margin-left: 0.5em; color: #888;">
+      <span id="toc-pin-icon" style="display: inline-block; vertical-align: middle;">📌</span>
+    </button>
+  </div>
   <ul id="toc-list">
     <li><em>Loading...</em></li>
   </ul>
@@ -322,17 +334,45 @@
   // TOC right panel toggle logic using hover bar
   const tocHoverZone = document.getElementById('toc-hover-zone');
   const tocPanelRight = document.getElementById('toc-panel-right');
+  const tocPinBtn = document.getElementById('toc-pin-btn');
+  const tocPinIcon = document.getElementById('toc-pin-icon');
   let tocHideTimeout = null;
+  let tocPinned = localStorage.getItem('tocPanelPinned') === 'true';
+
+  function setTocPinned(pinned) {
+    tocPinned = pinned;
+    if (pinned) {
+      tocPanelRight.classList.add('visible');
+      tocPinIcon.textContent = '📌';
+      localStorage.setItem('tocPanelPinned', 'true');
+      tocHoverZone.classList.add('pinned');
+    } else {
+      tocPinIcon.textContent = '📍';
+      localStorage.setItem('tocPanelPinned', 'false');
+      tocHoverZone.classList.remove('pinned');
+    }
+  }
+
+  setTocPinned(tocPinned);
+
+  tocPinBtn.addEventListener('click', function(e) {
+    setTocPinned(!tocPinned);
+    e.stopPropagation();
+  });
 
   tocHoverZone.addEventListener('mouseenter', () => {
-    tocPanelRight.classList.add('visible');
-    if (tocHideTimeout) clearTimeout(tocHideTimeout);
+    if (!tocPinned) {
+      tocPanelRight.classList.add('visible');
+      if (tocHideTimeout) clearTimeout(tocHideTimeout);
+    }
   });
 
   tocPanelRight.addEventListener('mouseleave', () => {
-    tocHideTimeout = setTimeout(() => {
-      tocPanelRight.classList.remove('visible');
-    }, 200);
+    if (!tocPinned) {
+      tocHideTimeout = setTimeout(() => {
+        tocPanelRight.classList.remove('visible');
+      }, 200);
+    }
   });
 
   // Optional: Hide panel if user clicks outside
@@ -340,7 +380,10 @@
     if (
       tocPanelRight.classList.contains('visible') &&
       !tocPanelRight.contains(e.target) &&
-      e.target !== tocHoverZone
+      e.target !== tocHoverZone &&
+      e.target !== tocPinBtn &&
+      e.target !== tocPinIcon &&
+      !tocPinned
     ) {
       tocPanelRight.classList.remove('visible');
     }
@@ -348,7 +391,6 @@
 
   // Dynamically generate hierarchical TOC up to H3 for blog pages
   document.addEventListener('DOMContentLoaded', function() {
-    // Only run on blog pages (not homepage)
     if (!window.location.pathname.match(/^\/($|index\.html)/)) {
       const tocList = document.getElementById('toc-list');
       const content = document.querySelector('.post, .page, .main-content, .site-content, main, #main');
