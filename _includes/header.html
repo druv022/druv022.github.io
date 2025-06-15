@@ -671,7 +671,33 @@
     margin-right: 260px !important;
     transition: margin-right 0.3s cubic-bezier(.4,0,.2,1);
   }
+  /* Right edge hover bar for blog list */
+  #blog-list-hover-zone {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100vh;
+    z-index: 9999;
+    background: #c5d6e8;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: block;
+  }
+  #blog-list-hover-zone:hover {
+    background: #7fa3c9;
+    opacity: 0.8;
+  }
+  #blog-list-hover-zone.pinned,
+  #blog-list-hover-zone.pinned:hover {
+    background: #c5d6e8 !important;
+    opacity: 0.5 !important;
+    cursor: default;
+  }
 </style>
+<!-- Right edge hover bar for blog list -->
+<div id="blog-list-hover-zone" title="Show Blog List"></div>
 <!-- Right blog list/search panel -->
 <nav id="blog-list-panel" aria-label="Blog List">
   <h3>All Blog Posts</h3>
@@ -688,31 +714,126 @@
   </ul>
 </nav>
 <script>
-  // Show/hide blog list panel on hash change or Scribbles click
-  function toggleBlogListPanel() {
-    const panel = document.getElementById('blog-list-panel');
-    if (window.location.hash === '#blog') {
-      panel.classList.add('visible');
-      document.body.classList.add('blog-list-panel-visible');
-    } else {
-      panel.classList.remove('visible');
-      document.body.classList.remove('blog-list-panel-visible');
-    }
-  }
+  // Blog list panel toggle logic using hover bar, hash, and pin
+  const blogListHoverZone = document.getElementById('blog-list-hover-zone');
+  const blogListPanel = document.getElementById('blog-list-panel');
+  let blogListHideTimeout = null;
+  // Unpin by default, but restore previous state if available
+  let blogListPinned = localStorage.getItem('blogListPanelPinned') === 'true';
 
-  // Initial check
-  toggleBlogListPanel();
-
-  // Listen for hash changes
-  window.addEventListener('hashchange', toggleBlogListPanel);
-
-  // Also handle direct click on Scribbles button (in case of JS navigation)
+  // Add a pin button to the panel header
   document.addEventListener('DOMContentLoaded', function() {
+    // Add pin button if not already present
+    if (!document.getElementById('blog-list-pin-btn')) {
+      const h3 = blogListPanel.querySelector('h3');
+      if (h3) {
+        const btn = document.createElement('button');
+        btn.id = 'blog-list-pin-btn';
+        btn.title = 'Pin/unpin blog list panel';
+        btn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:1.2em;margin-left:0.5em;color:#888;vertical-align:middle;';
+        btn.innerHTML = '<span id="blog-list-pin-icon">📌</span>';
+        h3.style.display = 'inline-block';
+        h3.after(btn);
+      }
+    }
+
+    // Pin button logic
+    const pinBtn = document.getElementById('blog-list-pin-btn');
+    const pinIcon = document.getElementById('blog-list-pin-icon');
+    function setBlogListPinned(pinned) {
+      blogListPinned = pinned;
+      if (pinned) {
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+        blogListHoverZone.classList.add('pinned');
+        pinIcon.textContent = '📌';
+        localStorage.setItem('blogListPanelPinned', 'true');
+      } else {
+        blogListHoverZone.classList.remove('pinned');
+        pinIcon.textContent = '📍';
+        localStorage.setItem('blogListPanelPinned', 'false');
+      }
+    }
+    setBlogListPinned(blogListPinned);
+
+    if (pinBtn) {
+      pinBtn.addEventListener('click', function(e) {
+        setBlogListPinned(!blogListPinned);
+        e.stopPropagation();
+      });
+    }
+
+    // Show/hide on hash change or Scribbles click
+    function toggleBlogListPanelByHash(forceUnpin = false) {
+      if (window.location.hash === '#blog' || window.location.pathname.replace(/\/+$/, '') === '/blogs') {
+        // If coming from Scribbles, always unpin
+        if (forceUnpin) {
+          setBlogListPinned(false);
+        } else {
+          setBlogListPinned(blogListPinned);
+        }
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+      } else if (!blogListPinned) {
+        blogListPanel.classList.remove('visible');
+        document.body.classList.remove('blog-list-panel-visible');
+      }
+    }
+
+    // Initial check
+    toggleBlogListPanelByHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', function() {
+      toggleBlogListPanelByHash();
+    });
+
+    // Hover logic
+    blogListHoverZone.addEventListener('mouseenter', () => {
+      if (!blogListPinned) {
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+        if (blogListHideTimeout) clearTimeout(blogListHideTimeout);
+      }
+    });
+
+    blogListPanel.addEventListener('mouseleave', () => {
+      if (!blogListPinned) {
+        blogListHideTimeout = setTimeout(() => {
+          blogListPanel.classList.remove('visible');
+          document.body.classList.remove('blog-list-panel-visible');
+        }, 200);
+      }
+    });
+
+    blogListPanel.addEventListener('mouseenter', () => {
+      if (blogListHideTimeout) clearTimeout(blogListHideTimeout);
+    });
+
+    // Optional: Hide panel if user clicks outside
+    document.addEventListener('click', function(e) {
+      if (
+        blogListPanel.classList.contains('visible') &&
+        !blogListPanel.contains(e.target) &&
+        e.target !== blogListHoverZone &&
+        e.target !== pinBtn &&
+        e.target !== pinIcon &&
+        !blogListPinned
+      ) {
+        blogListPanel.classList.remove('visible');
+        document.body.classList.remove('blog-list-panel-visible');
+      }
+    });
+
+    // Also handle direct click on Scribbles button (in case of JS navigation)
     var scribblesBtn = document.querySelector('.blog-button');
     if (scribblesBtn) {
       scribblesBtn.addEventListener('click', function(e) {
-        // Let the hashchange event handle the panel
-        setTimeout(toggleBlogListPanel, 10);
+        // Always unpin when clicking Scribbles
+        setBlogListPinned(false);
+        setTimeout(function() {
+          toggleBlogListPanelByHash(true);
+        }, 10);
       });
     }
 
