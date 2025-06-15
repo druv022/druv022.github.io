@@ -3,6 +3,7 @@
   <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
 </span>
 
+{% if page.url == "/" or page.url == site.baseurl %}
 <header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
   <div class="panel-main">
 
@@ -175,3 +176,156 @@
     <div class="panel-cover--overlay"></div>
   </div>
 </header>
+{% else %}
+<style>
+  /* Hide panel by default, show when .panel-cover--visible is added */
+  .panel-cover {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 320px;
+    height: 100vh;
+    background: #222;
+    transition: transform 0.3s;
+  }
+  .panel-cover.panel-cover--visible {
+    display: block;
+    animation: fadeInPanel 0.3s;
+  }
+  @keyframes fadeInPanel {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  /* Always show a small hover bar on the left edge */
+  #panel-hover-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 100vh;
+    z-index: 9998;
+    background: #444;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  #panel-hover-zone:hover {
+    background: #222;
+    opacity: 0.8;
+  }
+</style>
+<div id="panel-hover-zone"></div>
+<header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+        <a href="{{ site.baseurl }}/" title="link to home of {{ site.title }}">
+          <img src="{{ site.baseurl }}/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">{{ site.title }}</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">{{ site.description }}</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+        <div class="navigation-wrapper">
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="{{ site.baseurl }}/#blog" title="link to {{ site.title }} blog" class="blog-button">Scribbles</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            {% if site.author.twitter_username %}
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/{{ site.author.twitter_username }}" title="@{{ site.author.twitter_username }} on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.facebook_username %}
+              <!-- Facebook -->
+              <li class="navigation__item">
+                <a href="http://fb.me/{{ site.author.facebook_username }}" title="{{ site.author.facebook_username }} on Facebook" target="_blank">
+                  <i class="icon icon-social-facebook"></i>
+                  <span class="label">Facebook</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.linkedin_username %}
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/{{ site.author.linkedin_username }}" title="{{ site.author.linkedin_username }} on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.github_username %}
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/{{ site.author.github_username }}" title="{{ site.author.github_username }} on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.email %}
+              <!-- Email -->
+              <li class="navigation__item">
+                <a href="mailto:{{ site.author.email }}" title="Email {{ site.author.email }}" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+            {% endif %}
+
+            <!-- RSS -->
+            <!-- <li class="navigation__item">
+              <a href="{{ site.baseurl }}/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li> -->
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+<script>
+  // Show panel when mouse enters left edge, hide when mouse leaves panel
+  const panel = document.querySelector('.panel-cover');
+  const hoverZone = document.getElementById('panel-hover-zone');
+  let hideTimeout = null;
+
+  hoverZone.addEventListener('mouseenter', () => {
+    panel.classList.add('panel-cover--visible');
+    if (hideTimeout) clearTimeout(hideTimeout);
+  });
+
+  panel.addEventListener('mouseleave', () => {
+    hideTimeout = setTimeout(() => {
+      panel.classList.remove('panel-cover--visible');
+    }, 200);
+  });
+
+  // Optional: Hide panel if user clicks outside
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('panel-cover--visible') && !panel.contains(e.target) && e.target !== hoverZone) {
+      panel.classList.remove('panel-cover--visible');
+    }
+  });
+</script>
+{% endif %}
