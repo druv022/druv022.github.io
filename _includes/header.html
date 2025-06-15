@@ -596,3 +596,137 @@
   shiftContentWithPanel();
 </script>
 {% endif %}
+
+{% if page.url == "/" or page.url == site.baseurl %}
+<style>
+  /* Right blog list panel styles */
+  #blog-list-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 260px;
+    height: 100vh;
+    background: #f8fafd;
+    border-left: 1px solid #e0e0e0;
+    z-index: 9998;
+    overflow-y: auto;
+    padding: 1.2em 1em 1em 1em;
+    box-shadow: -1px 0 6px rgba(0,0,0,0.03);
+    font-size: 1em;
+    color: #222;
+    display: none; /* Hide by default */
+    transition: transform 0.3s;
+  }
+  #blog-list-panel.visible {
+    display: block;
+  }
+  #blog-list-panel h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 0.7em;
+  }
+  #blog-list-panel input[type="search"] {
+    width: 100%;
+    padding: 0.4em 0.7em;
+    margin-bottom: 1em;
+    border: 1px solid #c5d6e8;
+    border-radius: 4px;
+    font-size: 1em;
+    background: #fff;
+    color: #222;
+  }
+  #blog-list-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #blog-list-panel li {
+    margin-bottom: 0.6em;
+  }
+  #blog-list-panel a {
+    color: #2a4d7a;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.97em;
+    word-break: break-word;
+  }
+  #blog-list-panel a:hover {
+    color: #1a2d4a;
+    text-decoration: underline;
+  }
+  /* Only shift content when panel is visible */
+  body.blog-list-panel-visible,
+  .blog-list-panel-visible .site-content,
+  .blog-list-panel-visible .main-content,
+  .blog-list-panel-visible .post,
+  .blog-list-panel-visible .page,
+  .blog-list-panel-visible .content,
+  .blog-list-panel-visible #main,
+  .blog-list-panel-visible #content,
+  .blog-list-panel-visible .content-wrapper,
+  .blog-list-panel-visible .content-wrapper__inner,
+  .blog-list-panel-visible .post-container {
+    margin-right: 260px !important;
+    transition: margin-right 0.3s cubic-bezier(.4,0,.2,1);
+  }
+</style>
+<!-- Right blog list/search panel -->
+<nav id="blog-list-panel" aria-label="Blog List">
+  <h3>All Blog Posts</h3>
+  <input type="search" id="blog-search-input" placeholder="Search posts...">
+  <ul id="blog-list-ul">
+    {% for post in site.posts %}
+      <li>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        {% if post.date %}
+          <span style="color:#888; font-size:0.9em;">({{ post.date | date: "%b %d, %Y" }})</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+<script>
+  // Show/hide blog list panel on hash change or Scribbles click
+  function toggleBlogListPanel() {
+    const panel = document.getElementById('blog-list-panel');
+    if (window.location.hash === '#blog') {
+      panel.classList.add('visible');
+      document.body.classList.add('blog-list-panel-visible');
+    } else {
+      panel.classList.remove('visible');
+      document.body.classList.remove('blog-list-panel-visible');
+    }
+  }
+
+  // Initial check
+  toggleBlogListPanel();
+
+  // Listen for hash changes
+  window.addEventListener('hashchange', toggleBlogListPanel);
+
+  // Also handle direct click on Scribbles button (in case of JS navigation)
+  document.addEventListener('DOMContentLoaded', function() {
+    var scribblesBtn = document.querySelector('.blog-button');
+    if (scribblesBtn) {
+      scribblesBtn.addEventListener('click', function(e) {
+        // Let the hashchange event handle the panel
+        setTimeout(toggleBlogListPanel, 10);
+      });
+    }
+
+    // Blog search filter logic
+    var input = document.getElementById('blog-search-input');
+    var ul = document.getElementById('blog-list-ul');
+    if (!input || !ul) return;
+    input.addEventListener('input', function() {
+      var filter = input.value.toLowerCase();
+      Array.from(ul.getElementsByTagName('li')).forEach(function(li) {
+        var text = li.textContent || li.innerText;
+        li.style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+      });
+    });
+  });
+</script>
+{% endif %}
