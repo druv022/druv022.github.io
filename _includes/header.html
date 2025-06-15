@@ -215,6 +215,33 @@
     background: #222;
     opacity: 0.8;
   }
+
+  body {
+    margin-left: 0 !important;
+  }
+  body,
+  .site-content,
+  .main-content,
+  .post,
+  .page,
+  .content,
+  #main,
+  #content,
+  .content-wrapper,
+  .content-wrapper__inner,
+  .post-container {
+    margin-left: 2rem !important;    /* Add a decent left margin */
+    padding-left: 0 !important;
+    transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* When panel is visible, shift content to the right */
+  .panel-cover.panel-cover--visible ~ .content-wrapper,
+  .panel-cover.panel-cover--visible ~ main,
+  .panel-cover.panel-cover--visible ~ #main,
+  .panel-cover.panel-cover--visible ~ .site-content {
+    margin-left: calc(320px + 2rem) !important;  /* Panel width + margin */
+  }
 </style>
 <div id="panel-hover-zone"></div>
 <header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
@@ -327,5 +354,34 @@
       panel.classList.remove('panel-cover--visible');
     }
   });
+
+  // After the script that toggles .panel-cover--visible
+  // Add this to shift content dynamically
+
+  function shiftContentWithPanel() {
+    const panel = document.querySelector('.panel-cover');
+    const contentWrappers = [
+      document.querySelector('.content-wrapper'),
+      document.querySelector('main'),
+      document.querySelector('#main'),
+      document.querySelector('.site-content')
+    ].filter(Boolean);
+
+    function updateShift() {
+      if (panel.classList.contains('panel-cover--visible')) {
+        contentWrappers.forEach(el => el.style.marginLeft = '320px');
+      } else {
+        contentWrappers.forEach(el => el.style.marginLeft = '0');
+      }
+    }
+
+    // Initial state
+    updateShift();
+
+    // Observe class changes
+    const observer = new MutationObserver(updateShift);
+    observer.observe(panel, { attributes: true, attributeFilter: ['class'] });
+  }
+  shiftContentWithPanel();
 </script>
 {% endif %}
