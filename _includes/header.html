@@ -242,7 +242,116 @@
   .panel-cover.panel-cover--visible ~ .site-content {
     margin-left: calc(320px + 2rem) !important;  /* Panel width + margin */
   }
+
+  /* Right TOC panel styles */
+  #toc-panel-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 260px;
+    height: 100vh;
+    background: #f8fafd;
+    border-left: 1px solid #e0e0e0;
+    z-index: 9998;
+    overflow-y: auto;
+    padding: 1.2em 1em 1em 1em;
+    box-shadow: -1px 0 6px rgba(0,0,0,0.03);
+    font-size: 1em;
+    color: #222;
+    display: none;
+    transition: transform 0.3s;
+  }
+  #toc-panel-right.visible {
+    display: block;
+  }
+  #toc-panel-right h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 0.7em;
+  }
+  #toc-panel-right ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #toc-panel-right li {
+    margin-bottom: 0.4em;
+  }
+  #toc-panel-right a {
+    color: #2a4d7a;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.97em;
+  }
+  #toc-panel-right a:hover {
+    color: #1a2d4a;
+    text-decoration: underline;
+  }
+
+  /* Right edge hover bar for TOC */
+  #toc-hover-zone {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100vh;
+    z-index: 9999;
+    background: #c5d6e8;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: block;
+  }
+  #toc-hover-zone:hover {
+    background: #7fa3c9;
+    opacity: 0.8;
+  }
 </style>
+<!-- Right edge hover bar -->
+<div id="toc-hover-zone" title="Show Table of Contents"></div>
+<!-- Right panel -->
+<nav id="toc-panel-right" aria-label="Table of Contents">
+  <h3>Table of Contents</h3>
+  <ul>
+    {% if page.toc %}
+      {% for item in page.toc %}
+        <li><a href="#{{ item.id }}">{{ item.text }}</a></li>
+      {% endfor %}
+    {% else %}
+      <li><em>No headings found</em></li>
+    {% endif %}
+  </ul>
+</nav>
+<script>
+  // TOC right panel toggle logic using hover bar
+  const tocHoverZone = document.getElementById('toc-hover-zone');
+  const tocPanelRight = document.getElementById('toc-panel-right');
+  let tocHideTimeout = null;
+
+  tocHoverZone.addEventListener('mouseenter', () => {
+    tocPanelRight.classList.add('visible');
+    if (tocHideTimeout) clearTimeout(tocHideTimeout);
+  });
+
+  tocPanelRight.addEventListener('mouseleave', () => {
+    tocHideTimeout = setTimeout(() => {
+      tocPanelRight.classList.remove('visible');
+    }, 200);
+  });
+
+  // Optional: Hide panel if user clicks outside
+  document.addEventListener('click', function(e) {
+    if (
+      tocPanelRight.classList.contains('visible') &&
+      !tocPanelRight.contains(e.target) &&
+      e.target !== tocHoverZone
+    ) {
+      tocPanelRight.classList.remove('visible');
+    }
+  });
+</script>
 <div id="panel-hover-zone"></div>
 <header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
   <div class="panel-main">
