@@ -1,6 +1,6 @@
 # Site settings
 title: Dhruba Pujary
-description: 'I am an AI enthusiast and wants to explore the (un-)limited power of machines in a scientific way.'
+description: 'Experienced AI Researcher in applying machine learning to solve real-world problems, now focused on bridging AI innovation with business strategy.'
 url: 'https://druv022.github.io'
 baseurl: ''
 # google_analytics: 'UA-XXXXXX-X'
@@ -10,7 +10,6 @@ author:
   name: 'Dhruba Pujary'
   email: drv022@gmail.com
   twitter_username: druv022
-  facebook_username: druv022
   github_username:  druv022
   linkedin_username:  dhruba-pujary-894a2253
 
