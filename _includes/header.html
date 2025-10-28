@@ -3,6 +3,7 @@
   <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
 </span>
 
+{% if page.url == "/" or page.url == site.baseurl %}
 <header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
   <div class="panel-main">
 
@@ -16,11 +17,89 @@
         <p class="panel-cover__description">{{ site.description }}</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
+        {% if page.url == "/" or page.url == site.baseurl %}
+        <section id="blog-thumbnails">
+          <div class="carousel">
+            {% for post in site.posts limit:5 %}
+              <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                <a href="{{ post.url | relative_url }}">
+                  <img src="{{ post.thumbnail | default: '/assets/default-thumb.jpg' }}" alt="{{ post.title }}">
+                  <p>{{ post.title }}</p>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+        <style>
+        .carousel {
+          display: flex;
+          overflow: hidden;
+          width: 220px;
+          margin: 0 auto 1em auto;
+          position: relative;
+          height: 170px;
+        }
+        .carousel-item {
+          min-width: 100%;
+          opacity: 0;
+          position: absolute;
+          left: 0;
+          top: 0;
+          pointer-events: none;
+          transition: opacity 0.7s;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .carousel-item.active {
+          opacity: 1;
+          z-index: 2;
+          pointer-events: auto;
+        }
+        .carousel-item img {
+          width: 180px;
+          height: 110px;
+          object-fit: cover;
+          border-radius: 8px;
+          display: block;
+          margin-bottom: 0.5em;
+        }
+        .carousel-item p {
+          margin: 0;
+          font-size: 1em;
+          color: #fff;
+          text-align: center;
+          max-width: 180px;
+          word-break: break-word;
+          font-weight: 500;
+          text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+        }
+        </style>
+        <script>
+        // Rotating single thumbnail logic with fade-in/out, keeping position fixed
+        (function() {
+          const items = document.querySelectorAll('.carousel-item');
+          let current = 0;
+          if (items.length > 1) {
+            setInterval(() => {
+              items[current].classList.remove('active');
+              // Wait for fade-out before showing next
+              setTimeout(() => {
+                current = (current + 1) % items.length;
+                items[current].classList.add('active');
+              }, 700); // 0.7s fade-out
+            }, 3700); // 3s display + 0.7s fade-out
+          }
+        })();
+        </script>
+        {% endif %}
+
         <div class="navigation-wrapper">
 
           <nav class="cover-navigation cover-navigation--primary">
             <ul class="navigation">
-              <li class="navigation__item"><a href="{{ site.baseurl }}/#blog" title="link to {{ site.title }} blog" class="blog-button">Blah Blah-Blah</a></li>
+              <li class="navigation__item"><a href="{{ site.baseurl }}/#blog" title="link to {{ site.title }} blog" class="blog-button">Scribbles</a></li>
             </ul>
           </nav>
 
@@ -97,3 +176,678 @@
     <div class="panel-cover--overlay"></div>
   </div>
 </header>
+{% else %}
+<style>
+  /* Hide panel by default, show when .panel-cover--visible is added */
+  .panel-cover {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 320px;
+    height: 100vh;
+    background: #222;
+    transition: transform 0.3s;
+  }
+  .panel-cover.panel-cover--visible {
+    display: block;
+    animation: fadeInPanel 0.3s;
+  }
+  @keyframes fadeInPanel {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  /* Always show a small hover bar on the left edge */
+  #panel-hover-zone {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 100vh;
+    z-index: 9998;
+    background: #444;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  #panel-hover-zone:hover {
+    background: #222;
+    opacity: 0.8;
+  }
+
+  body {
+    margin-left: 0 !important;
+  }
+  body,
+  .site-content,
+  .main-content,
+  .post,
+  .page,
+  .content,
+  #main,
+  #content,
+  .content-wrapper,
+  .content-wrapper__inner,
+  .post-container {
+    margin-left: 2rem !important;    /* Add a decent left margin */
+    padding-left: 0 !important;
+    transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* When panel is visible, shift content to the right */
+  .panel-cover.panel-cover--visible ~ .content-wrapper,
+  .panel-cover.panel-cover--visible ~ main,
+  .panel-cover.panel-cover--visible ~ #main,
+  .panel-cover.panel-cover--visible ~ .site-content {
+    margin-left: calc(320px + 2rem) !important;  /* Panel width + margin */
+  }
+
+  /* Right TOC panel styles */
+  #toc-panel-right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 260px;
+    height: 100vh;
+    background: #f8fafd;
+    border-left: 1px solid #e0e0e0;
+    z-index: 9998;
+    overflow-y: auto;
+    padding: 1.2em 1em 1em 1em;
+    box-shadow: -1px 0 6px rgba(0,0,0,0.03);
+    font-size: 1em;
+    color: #222;
+    display: none;
+    transition: transform 0.3s;
+  }
+  #toc-panel-right.visible {
+    display: block;
+  }
+  #toc-panel-right h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 0.7em;
+  }
+  #toc-panel-right ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #toc-panel-right li {
+    margin-bottom: 0.4em;
+  }
+  #toc-panel-right a {
+    color: #2a4d7a;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.97em;
+  }
+  #toc-panel-right a:hover {
+    color: #1a2d4a;
+    text-decoration: underline;
+  }
+
+  /* Right edge hover bar for TOC */
+  #toc-hover-zone {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100vh;
+    z-index: 9999;
+    background: #c5d6e8;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: block;
+  }
+  #toc-hover-zone:hover {
+    background: #7fa3c9;
+    opacity: 0.8;
+  }
+  /* When TOC is pinned, keep bar constant color and opacity */
+  #toc-hover-zone.pinned,
+  #toc-hover-zone.pinned:hover {
+    background: #c5d6e8 !important;
+    opacity: 0.5 !important;
+    cursor: default;
+  }
+</style>
+<!-- Right edge hover bar -->
+<div id="toc-hover-zone" title="Show Table of Contents"></div>
+<!-- Right panel -->
+<nav id="toc-panel-right" aria-label="Table of Contents">
+  <div style="display: flex; align-items: center; justify-content: space-between;">
+    <h3 style="margin: 0;">Table of Contents</h3>
+    <button id="toc-pin-btn" title="Pin/unpin TOC panel" style="background: none; border: none; cursor: pointer; font-size: 1.2em; margin-left: 0.5em; color: #888;">
+      <span id="toc-pin-icon" style="display: inline-block; vertical-align: middle;">📌</span>
+    </button>
+  </div>
+  <ul id="toc-list">
+    <li><em>Loading...</em></li>
+  </ul>
+</nav>
+<script>
+  // TOC right panel toggle logic using hover bar
+  const tocHoverZone = document.getElementById('toc-hover-zone');
+  const tocPanelRight = document.getElementById('toc-panel-right');
+  const tocPinBtn = document.getElementById('toc-pin-btn');
+  const tocPinIcon = document.getElementById('toc-pin-icon');
+  let tocHideTimeout = null;
+  let tocPinned = localStorage.getItem('tocPanelPinned') === 'true';
+
+  function setTocPinned(pinned) {
+    tocPinned = pinned;
+    if (pinned) {
+      tocPanelRight.classList.add('visible');
+      tocPinIcon.textContent = '📌';
+      localStorage.setItem('tocPanelPinned', 'true');
+      tocHoverZone.classList.add('pinned');
+    } else {
+      tocPinIcon.textContent = '📍';
+      localStorage.setItem('tocPanelPinned', 'false');
+      tocHoverZone.classList.remove('pinned');
+    }
+  }
+
+  setTocPinned(tocPinned);
+
+  tocPinBtn.addEventListener('click', function(e) {
+    setTocPinned(!tocPinned);
+    e.stopPropagation();
+  });
+
+  tocHoverZone.addEventListener('mouseenter', () => {
+    if (!tocPinned) {
+      tocPanelRight.classList.add('visible');
+      if (tocHideTimeout) clearTimeout(tocHideTimeout);
+    }
+  });
+
+  tocPanelRight.addEventListener('mouseleave', () => {
+    if (!tocPinned) {
+      tocHideTimeout = setTimeout(() => {
+        tocPanelRight.classList.remove('visible');
+      }, 200);
+    }
+  });
+
+  // Optional: Hide panel if user clicks outside
+  document.addEventListener('click', function(e) {
+    if (
+      tocPanelRight.classList.contains('visible') &&
+      !tocPanelRight.contains(e.target) &&
+      e.target !== tocHoverZone &&
+      e.target !== tocPinBtn &&
+      e.target !== tocPinIcon &&
+      !tocPinned
+    ) {
+      tocPanelRight.classList.remove('visible');
+    }
+  });
+
+  // Dynamically generate hierarchical TOC up to H3 for blog pages
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!window.location.pathname.match(/^\/($|index\.html)/)) {
+      const tocList = document.getElementById('toc-list');
+      const content = document.querySelector('.post, .page, .main-content, .site-content, main, #main');
+      if (!content) {
+        tocList.innerHTML = '<li><em>No headings found</em></li>';
+        return;
+      }
+      const headings = Array.from(content.querySelectorAll('h1, h2, h3'));
+      if (headings.length === 0) {
+        tocList.innerHTML = '<li><em>No headings found</em></li>';
+        return;
+      }
+
+      // Build hierarchy
+      let tocTree = [];
+      let lastH1 = null, lastH2 = null;
+      headings.forEach(h => {
+        if (!h.id) return;
+        const entry = { id: h.id, text: h.textContent, children: [] };
+        if (h.tagName === 'H1') {
+          tocTree.push(entry);
+          lastH1 = entry;
+          lastH2 = null;
+        } else if (h.tagName === 'H2') {
+          if (lastH1) {
+            lastH1.children.push(entry);
+            lastH2 = entry;
+          } else {
+            tocTree.push(entry); // fallback if no H1 before
+            lastH2 = entry;
+          }
+        } else if (h.tagName === 'H3') {
+          if (lastH2) {
+            lastH2.children.push(entry);
+          } else if (lastH1) {
+            lastH1.children.push(entry); // fallback if no H2 before
+          } else {
+            tocTree.push(entry); // fallback if no H1/H2 before
+          }
+        }
+      });
+
+      // Render hierarchy as nested list with dashes
+      function renderToc(items, level = 1) {
+        let html = '<ul style="margin-left:' + ((level-1)*1.2) + 'em">';
+        items.forEach(item => {
+          let prefix = '';
+          if (level === 2) prefix = '&ndash; ';
+          if (level === 3) prefix = '&middot; ';
+          html += `<li>${prefix}<a href="#${item.id}">${item.text}</a>`;
+          if (item.children && item.children.length) {
+            html += renderToc(item.children, level + 1);
+          }
+          html += '</li>';
+        });
+        html += '</ul>';
+        return html;
+      }
+
+      tocList.innerHTML = renderToc(tocTree, 1);
+    }
+  });
+</script>
+<div id="panel-hover-zone"></div>
+<header class="panel-cover" style="background-image: url({{ site.baseurl }}/images/cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+        <a href="{{ site.baseurl }}/" title="link to home of {{ site.title }}">
+          <img src="{{ site.baseurl }}/images/profile.jpg" class="user-image" alt="My Profile Photo">
+          <h1 class="panel-cover__title panel-title">{{ site.title }}</h1>
+        </a>
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description">{{ site.description }}</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+        <div class="navigation-wrapper">
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="{{ site.baseurl }}/#blog" title="link to {{ site.title }} blog" class="blog-button">Scribbles</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+
+            {% if site.author.twitter_username %}
+              <!-- Twitter -->
+              <li class="navigation__item">
+                <a href="http://twitter.com/{{ site.author.twitter_username }}" title="@{{ site.author.twitter_username }} on Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.facebook_username %}
+              <!-- Facebook -->
+              <li class="navigation__item">
+                <a href="http://fb.me/{{ site.author.facebook_username }}" title="{{ site.author.facebook_username }} on Facebook" target="_blank">
+                  <i class="icon icon-social-facebook"></i>
+                  <span class="label">Facebook</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.linkedin_username %}
+              <!-- LinkedIn -->
+              <li class="navigation__item">
+                <a href="https://www.linkedin.com/in/{{ site.author.linkedin_username }}" title="{{ site.author.linkedin_username }} on LinkedIn" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">LinkedIn</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.github_username %}
+              <!-- GitHub -->
+              <li class="navigation__item">
+                <a href="https://www.github.com/{{ site.author.github_username }}" title="{{ site.author.github_username }} on GitHub" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+            {% endif %}
+
+            {% if site.author.email %}
+              <!-- Email -->
+              <li class="navigation__item">
+                <a href="mailto:{{ site.author.email }}" title="Email {{ site.author.email }}" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+            {% endif %}
+
+            <!-- RSS -->
+            <!-- <li class="navigation__item">
+              <a href="{{ site.baseurl }}/feed.xml" title="Subscribe" target="_blank">
+                <i class="icon icon-rss"></i>
+                <span class="label">RSS</span>
+              </a>
+            </li> -->
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+<script>
+  // Show panel when mouse enters left edge, hide when mouse leaves panel
+  const panel = document.querySelector('.panel-cover');
+  const hoverZone = document.getElementById('panel-hover-zone');
+  let hideTimeout = null;
+
+  hoverZone.addEventListener('mouseenter', () => {
+    panel.classList.add('panel-cover--visible');
+    if (hideTimeout) clearTimeout(hideTimeout);
+  });
+
+  panel.addEventListener('mouseleave', () => {
+    hideTimeout = setTimeout(() => {
+      panel.classList.remove('panel-cover--visible');
+    }, 200);
+  });
+
+  // Optional: Hide panel if user clicks outside
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('panel-cover--visible') && !panel.contains(e.target) && e.target !== hoverZone) {
+      panel.classList.remove('panel-cover--visible');
+    }
+  });
+
+  // After the script that toggles .panel-cover--visible
+  // Add this to shift content dynamically
+
+  function shiftContentWithPanel() {
+    const panel = document.querySelector('.panel-cover');
+    const contentWrappers = [
+      document.querySelector('.content-wrapper'),
+      document.querySelector('main'),
+      document.querySelector('#main'),
+      document.querySelector('.site-content')
+    ].filter(Boolean);
+
+    function updateShift() {
+      if (panel.classList.contains('panel-cover--visible')) {
+        contentWrappers.forEach(el => el.style.marginLeft = '320px');
+      } else {
+        contentWrappers.forEach(el => el.style.marginLeft = '0');
+      }
+    }
+
+    // Initial state
+    updateShift();
+
+    // Observe class changes
+    const observer = new MutationObserver(updateShift);
+    observer.observe(panel, { attributes: true, attributeFilter: ['class'] });
+  }
+  shiftContentWithPanel();
+</script>
+{% endif %}
+
+{% if page.url == "/" or page.url == site.baseurl %}
+<style>
+  /* Right blog list panel styles */
+  #blog-list-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 260px;
+    height: 100vh;
+    background: #f8fafd;
+    border-left: 1px solid #e0e0e0;
+    z-index: 9998;
+    overflow-y: auto;
+    padding: 1.2em 1em 1em 1em;
+    box-shadow: -1px 0 6px rgba(0,0,0,0.03);
+    font-size: 1em;
+    color: #222;
+    display: none; /* Hide by default */
+    transition: transform 0.3s;
+  }
+  #blog-list-panel.visible {
+    display: block;
+  }
+  #blog-list-panel h3 {
+    margin-top: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 0.7em;
+  }
+  #blog-list-panel input[type="search"] {
+    width: 100%;
+    padding: 0.4em 0.7em;
+    margin-bottom: 1em;
+    border: 1px solid #c5d6e8;
+    border-radius: 4px;
+    font-size: 1em;
+    background: #fff;
+    color: #222;
+  }
+  #blog-list-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #blog-list-panel li {
+    margin-bottom: 0.6em;
+  }
+  #blog-list-panel a {
+    color: #2a4d7a;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.97em;
+    word-break: break-word;
+  }
+  #blog-list-panel a:hover {
+    color: #1a2d4a;
+    text-decoration: underline;
+  }
+  /* Only shift content when panel is visible */
+  body.blog-list-panel-visible,
+  .blog-list-panel-visible .site-content,
+  .blog-list-panel-visible .main-content,
+  .blog-list-panel-visible .post,
+  .blog-list-panel-visible .page,
+  .blog-list-panel-visible .content,
+  .blog-list-panel-visible #main,
+  .blog-list-panel-visible #content,
+  .blog-list-panel-visible .content-wrapper,
+  .blog-list-panel-visible .content-wrapper__inner,
+  .blog-list-panel-visible .post-container {
+    margin-right: 260px !important;
+    transition: margin-right 0.3s cubic-bezier(.4,0,.2,1);
+  }
+  /* Right edge hover bar for blog list */
+  #blog-list-hover-zone {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 100vh;
+    z-index: 9999;
+    background: #c5d6e8;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: block;
+  }
+  #blog-list-hover-zone:hover {
+    background: #7fa3c9;
+    opacity: 0.8;
+  }
+  #blog-list-hover-zone.pinned,
+  #blog-list-hover-zone.pinned:hover {
+    background: #c5d6e8 !important;
+    opacity: 0.5 !important;
+    cursor: default;
+  }
+</style>
+<!-- Right edge hover bar for blog list -->
+<div id="blog-list-hover-zone" title="Show Blog List"></div>
+<!-- Right blog list/search panel -->
+<nav id="blog-list-panel" aria-label="Blog List">
+  <h3>All Blog Posts</h3>
+  <input type="search" id="blog-search-input" placeholder="Search posts...">
+  <ul id="blog-list-ul">
+    {% for post in site.posts %}
+      <li>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        {% if post.date %}
+          <span style="color:#888; font-size:0.9em;">({{ post.date | date: "%b %d, %Y" }})</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+<script>
+  // Blog list panel toggle logic using hover bar, hash, and pin
+  const blogListHoverZone = document.getElementById('blog-list-hover-zone');
+  const blogListPanel = document.getElementById('blog-list-panel');
+  let blogListHideTimeout = null;
+  // Unpin by default, but restore previous state if available
+  let blogListPinned = localStorage.getItem('blogListPanelPinned') === 'true';
+
+  // Add a pin button to the panel header
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add pin button if not already present
+    if (!document.getElementById('blog-list-pin-btn')) {
+      const h3 = blogListPanel.querySelector('h3');
+      if (h3) {
+        const btn = document.createElement('button');
+        btn.id = 'blog-list-pin-btn';
+        btn.title = 'Pin/unpin blog list panel';
+        btn.style.cssText = 'background:none;border:none;cursor:pointer;font-size:1.2em;margin-left:0.5em;color:#888;vertical-align:middle;';
+        btn.innerHTML = '<span id="blog-list-pin-icon">📌</span>';
+        h3.style.display = 'inline-block';
+        h3.after(btn);
+      }
+    }
+
+    // Pin button logic
+    const pinBtn = document.getElementById('blog-list-pin-btn');
+    const pinIcon = document.getElementById('blog-list-pin-icon');
+    function setBlogListPinned(pinned) {
+      blogListPinned = pinned;
+      if (pinned) {
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+        blogListHoverZone.classList.add('pinned');
+        pinIcon.textContent = '📌';
+        localStorage.setItem('blogListPanelPinned', 'true');
+      } else {
+        blogListHoverZone.classList.remove('pinned');
+        pinIcon.textContent = '📍';
+        localStorage.setItem('blogListPanelPinned', 'false');
+      }
+    }
+    setBlogListPinned(blogListPinned);
+
+    if (pinBtn) {
+      pinBtn.addEventListener('click', function(e) {
+        setBlogListPinned(!blogListPinned);
+        e.stopPropagation();
+      });
+    }
+
+    // Show/hide on hash change or Scribbles click
+    function toggleBlogListPanelByHash(forceUnpin = false) {
+      if (window.location.hash === '#blog' || window.location.pathname.replace(/\/+$/, '') === '/blogs') {
+        // If coming from Scribbles, always unpin
+        if (forceUnpin) {
+          setBlogListPinned(false);
+        } else {
+          setBlogListPinned(blogListPinned);
+        }
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+      } else if (!blogListPinned) {
+        blogListPanel.classList.remove('visible');
+        document.body.classList.remove('blog-list-panel-visible');
+      }
+    }
+
+    // Initial check
+    toggleBlogListPanelByHash();
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', function() {
+      toggleBlogListPanelByHash();
+    });
+
+    // Hover logic
+    blogListHoverZone.addEventListener('mouseenter', () => {
+      if (!blogListPinned) {
+        blogListPanel.classList.add('visible');
+        document.body.classList.add('blog-list-panel-visible');
+        if (blogListHideTimeout) clearTimeout(blogListHideTimeout);
+      }
+    });
+
+    blogListPanel.addEventListener('mouseleave', () => {
+      if (!blogListPinned) {
+        blogListHideTimeout = setTimeout(() => {
+          blogListPanel.classList.remove('visible');
+          document.body.classList.remove('blog-list-panel-visible');
+        }, 200);
+      }
+    });
+
+    blogListPanel.addEventListener('mouseenter', () => {
+      if (blogListHideTimeout) clearTimeout(blogListHideTimeout);
+    });
+
+    // Optional: Hide panel if user clicks outside
+    document.addEventListener('click', function(e) {
+      if (
+        blogListPanel.classList.contains('visible') &&
+        !blogListPanel.contains(e.target) &&
+        e.target !== blogListHoverZone &&
+        e.target !== pinBtn &&
+        e.target !== pinIcon &&
+        !blogListPinned
+      ) {
+        blogListPanel.classList.remove('visible');
+        document.body.classList.remove('blog-list-panel-visible');
+      }
+    });
+
+    // Also handle direct click on Scribbles button (in case of JS navigation)
+    var scribblesBtn = document.querySelector('.blog-button');
+    if (scribblesBtn) {
+      scribblesBtn.addEventListener('click', function(e) {
+        // Always unpin when clicking Scribbles
+        setBlogListPinned(false);
+        setTimeout(function() {
+          toggleBlogListPanelByHash(true);
+        }, 10);
+      });
+    }
+
+    // Blog search filter logic
+    var input = document.getElementById('blog-search-input');
+    var ul = document.getElementById('blog-list-ul');
+    if (!input || !ul) return;
+    input.addEventListener('input', function() {
+      var filter = input.value.toLowerCase();
+      Array.from(ul.getElementsByTagName('li')).forEach(function(li) {
+        var text = li.textContent || li.innerText;
+        li.style.display = text.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
+      });
+    });
+  });
+</script>
+{% endif %}
