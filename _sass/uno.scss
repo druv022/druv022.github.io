@@ -981,7 +981,8 @@ h5 {
 
 p {
 	margin-bottom: 1.3em;
-	line-height: 1.7em; }
+	line-height: 1.7em; 
+}
 
 strong {
 	font-weight: bold; }
@@ -1097,10 +1098,11 @@ pre {
 	margin: 0 auto; }
 
 .content-wrapper {
-	z-index: 800;
-	width: 60%;
-	max-width: 800px;
-	margin-left: 40%; }
+  	flex-grow: 1; /* Allows it to take up available space */
+  	width: auto; /* Ensure it doesn't have a fixed width */
+  	margin-left: 0; /* Remove fixed margin if not needed */
+	margin-right: 0;
+}
 
 .content-wrapper__inner {
 	margin: 0 10%;
@@ -1176,6 +1178,12 @@ hr {
 	width: 30%;
 	margin: 2em 0;
 	border-top: 1px solid #dddddd; }
+
+.post {
+    p {
+        text-align: justify;
+    }
+}
 
 .error-code {
 	font-size: 6em; }
