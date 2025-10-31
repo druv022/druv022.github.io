@@ -5,7 +5,6 @@ date:   2025-10-31 1:06
 thumbnail: images/Screenshot 2025-06-15 at 10.20.23 PM.png
 ---
 
-# Augmented Research article with Gemini Deep Research: 
 Article: [Darkness before the Dawn](https://druv022.github.io/2025/ai-business/)
 
 Gemini [Link](https://gemini.google.com/share/e8e18c52e899)
