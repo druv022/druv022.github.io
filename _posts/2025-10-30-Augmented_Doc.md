@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Augmented Research article with Gemini Deep Research"
-date:   2025-10-31 1:06:
+date:   2025-10-31 1:06
 thumbnail: images/Screenshot 2025-06-15 at 10.20.23 PM.png
 ---
 
