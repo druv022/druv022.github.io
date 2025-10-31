@@ -159,16 +159,16 @@ The future will belong to those who embrace this change, not as a threat to be f
 * [Bill Gates calls AI "the biggest technical thing ever in my lifetime," but warns of a bubble, accessed October 30, 2025](https://the-decoder.com/bill-gates-calls-ai-the-biggest-technical-thing-ever-in-my-lifetime-but-warns-of-a-bubble/)\
 * [Bill Gates Thinks We're in an AI Bubble But Not a Dangerous One - Ositcom, accessed October 30, 2025](https://ositcom.com/blog/bill-gates-thinks-were-in-an-ai-bubble-but-not-dangerous)\
 * [Fed Chair Powell: AI is not like the dot-com bubble. - YouTube, accessed October 30, 2025,](https://www.youtube.com/watch?v=4vJGdEU-FHY)
-* [2024 Work Trend Index Annual Report, accessed October 30, 2025](https://assets-c4akfrf5b4d3f4b7.z01.azurefd.net/assets/2024/05/2024_Work_Trend_Index_Annual_Report_Executive_Summary_663b2135860a9.pdf)
+* [2024 Work Trend Index Annual Report, accessed October 30, 2025](https://assets-c4akfrf5b4d3f4b7.z01.azurefd.net/assets/2024/05/2024_Work_Trend_Index_Annual_Report_Executive_Summary_663b2135860a9.pdf)\
 * [How will Artificial Intelligence Affect Jobs 2025-2030 Nexford University, accessed October 30, 2025](https://www.nexford.edu/insights/how-will-ai-affect-jobs)
-* [The new white-collar risk: How AI is coming for America's office jobs, accessed October 30, 2025](https://www.hcamag.com/us/news/general/the-new-white-collar-risk-how-ai-is-coming-for-americas-office-jobs/554449)
-* [AI Impact on White-Collar Jobs: Is the Threat Real? - Rezi AI, accessed October 30, 2025](https://www.rezi.ai/posts/ai-impact-on-white-collar-jobs)
-* [Why AI-led layoffs are bad not just for the laid off: Big reality check coming for Indian economy, accessed October 30, 2025](https://m.economictimes.com/news/economy/indicators/why-layoffs-are-bad-not-just-for-the-laid-off/articleshow/124908580.cms)
-* [AI at Work: Key Findings of the 2024 Work Trend Index Annual Report by Microsoft and LinkedIn - DogmaGroup, accessed October 30, 2025](https://dogmagroup.co.uk/ai-at-work-annual-work-trend-index-2024-microsoft/)
-* [What AI Means for Growth and Jobs, accessed October 30, 2025](https://countercurrents.org/2025/10/what-ai-means-for-growth-and-jobs/)
-* [www.rezi.ai, accessed October 30, 2025](https://www.rezi.ai/posts/ai-impact-on-white-collar-jobs#:~:text=While%20automation%20may%20eliminate%20certain,work%20rather%20than%20routine%20tasks.)
-* [AI in classrooms: Why thoughtful integration matters more than fast adoption, accessed October 30, 2025,](https://www.indiatoday.in/education-today/featurephilia/story/ai-adoption-challenges-responsible-frameworks-cultural-readiness-enterprises-2809444-2025-10-28)
+* [The new white-collar risk: How AI is coming for America's office jobs, accessed October 30, 2025](https://www.hcamag.com/us/news/general/the-new-white-collar-risk-how-ai-is-coming-for-americas-office-jobs/554449)\
+* [AI Impact on White-Collar Jobs: Is the Threat Real? - Rezi AI, accessed October 30, 2025](https://www.rezi.ai/posts/ai-impact-on-white-collar-jobs)\
+* [Why AI-led layoffs are bad not just for the laid off: Big reality check coming for Indian economy, accessed October 30, 2025](https://m.economictimes.com/news/economy/indicators/why-layoffs-are-bad-not-just-for-the-laid-off/articleshow/124908580.cms)\
+* [AI at Work: Key Findings of the 2024 Work Trend Index Annual Report by Microsoft and LinkedIn - DogmaGroup, accessed October 30, 2025](https://dogmagroup.co.uk/ai-at-work-annual-work-trend-index-2024-microsoft/)\
+* [What AI Means for Growth and Jobs, accessed October 30, 2025](https://countercurrents.org/2025/10/what-ai-means-for-growth-and-jobs/)\
+* [www.rezi.ai, accessed October 30, 2025](https://www.rezi.ai/posts/ai-impact-on-white-collar-jobs#:~:text=While%20automation%20may%20eliminate%20certain,work%20rather%20than%20routine%20tasks.)\
+* [AI in classrooms: Why thoughtful integration matters more than fast adoption, accessed October 30, 2025,](https://www.indiatoday.in/education-today/featurephilia/story/ai-adoption-challenges-responsible-frameworks-cultural-readiness-enterprises-2809444-2025-10-28)\
 * [The state of AI: How organizations are rewiring to capture value - McKinsey, accessed October 30, 2025,](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai)
-* [The State of AI 2024: Main Takeaways from McKinsey Report - Switch Software Solutions, accessed October 30, 2025](https://www.switchsoftware.io/post/ai-in-2024-gen-ai-rise-and-business-impact)
-* [The State of Generative AI Report by McKinsey – Summary & Insights - pmwares, accessed October 30, 2025,](https://pmwares.com/the-state-of-generative-ai-report-by-mckinsey-summary-insights/)
+* [The State of AI 2024: Main Takeaways from McKinsey Report - Switch Software Solutions, accessed October 30, 2025](https://www.switchsoftware.io/post/ai-in-2024-gen-ai-rise-and-business-impact)\
+* [The State of Generative AI Report by McKinsey – Summary & Insights - pmwares, accessed October 30, 2025,](https://pmwares.com/the-state-of-generative-ai-report-by-mckinsey-summary-insights/)\
 * [The state of AI in early 2024 | McKinsey, accessed October 30, 2025,](https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai-2024)
