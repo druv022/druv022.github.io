@@ -1,3 +1,10 @@
+---
+layout: post
+title:  "Darkness Before the Dawn"
+date:   2025-10-31 12:06
+thumbnail: images/Google_Gemini_logo.svg.png
+---
+
 # “Darkness Before the Dawn”
 
 ### TL;DR:

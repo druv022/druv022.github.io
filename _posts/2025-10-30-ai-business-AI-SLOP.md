@@ -1,5 +1,12 @@
 
-# Augmented Research article with Gemini Deep Researh: 
+---
+layout: post
+title:  "Augmented Research article with Gemini Deep Research"
+date:   2025-10-31 1:06:
+thumbnail: images/Google_Gemini_logo.svg.png
+---
+
+# Augmented Research article with Gemini Deep Research: 
 Article: [Darkness before the Dawn](2025-10-30-ai-business.md)
 
 Gemini [Link](https://gemini.google.com/share/e8e18c52e899)
