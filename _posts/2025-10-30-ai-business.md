@@ -2,7 +2,7 @@
 layout: post
 title: "Darkness Before the Dawn"
 date: 2025-10-30 08:00:00 +0000
-thumbnail: /images/Google_Gemini_logo.png
+thumbnail: images/corporate-business-handshake-business-partners.jpg
 ---
 
 ## TL;DR:
